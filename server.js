@@ -167,6 +167,28 @@ app.post("/login", async (req, res) => {
     }
 });
 
+// Skyddad Admin-sida
+app.get("/admin", authenticateToken, (req, res) => {
+    res.json({ message: "Skyddad Admin route" });
+});
+
+// Validera jwt-token för inloggning
+function authenticateToken(req, res, next) {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    // Kontroll, token finns?
+    if(token == null) res.status(401).json({ message: "Authorization failed: Invalid/missing token."});
+    // Kontroll, token giltig?
+    jwt.verify(token, process.env.JWT_SECRET_KEY, (err, username) => {
+        if(err) return res.status(403).json({ message: "Invalid JWT."});
+
+        req.username = username;
+        next();
+    });
+}
+
+
 // Starta
 app.listen(port, () => {
     console.log("Server is running at port: " + port);
