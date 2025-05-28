@@ -84,7 +84,7 @@ app.put("/products/:id", async (req, res) => {
         let price = req.body.price;
         let description = req.body.description;
 
-        let result = await Product.updateOne({id_: id}, {$set: { name, price, description }});
+        let result = await Product.updateOne({_id: id}, {$set: { name, price, description }});
         return res.json(result);
 
     } catch(error) {
@@ -119,17 +119,20 @@ app.post("/login", async (req, res) => {
         }
 
         // Kontroll inloggning
-        //if(username == "admin" && password == "pass") {
+        //if(username == "admin" && password == "pass")
         
         // Hämta data från env-fil
         let adminAcc = process.env.ADMIN_ACCOUNT;
         let adminPass = process.env.ADMIN_PASSWORD;
 
-        if(!username == adminAcc) {
+        // Testlogg
+        console.log(adminAcc, adminPass);
+
+        if(username != adminAcc) {
             return res.status(401).json({ error: "Incorrect username and/or password" });
         } 
 
-        if(!password == adminPass) {
+        if(adminPass != adminPass) {
             return res.status(401).json({ error: "Incorrect username and/or password" });
         } else {
 
