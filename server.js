@@ -99,10 +99,26 @@ app.delete("/products/:id", async (req, res) => {
         let id = req.params.id;
         let result = await Product.deleteOne({_id: id});
         return res.json(result);
+
     } catch(error) {
         return res.status(204).json(error);
     }
 });
+
+
+// TEST UPPDATERA ///
+/* app.get("products/edit/:id", async (req, res) => {
+
+    try {
+        let id = req.params.id;
+        let result = await Product.find({_id: id });
+        return res.json(result);
+        
+    } catch(error) {
+        return res.status(204).json(error);
+    }
+}); */
+// TEST UPPDATERA ///
 
 
 // Admin login
