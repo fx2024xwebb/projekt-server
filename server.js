@@ -105,22 +105,6 @@ app.delete("/products/:id", async (req, res) => {
     }
 });
 
-
-// TEST UPPDATERA ///
-/* app.get("products/edit/:id", async (req, res) => {
-
-    try {
-        let id = req.params.id;
-        let result = await Product.find({_id: id });
-        return res.json(result);
-        
-    } catch(error) {
-        return res.status(204).json(error);
-    }
-}); */
-// TEST UPPDATERA ///
-
-
 // Admin login
 app.post("/login", async (req, res) => {
     
@@ -133,16 +117,10 @@ app.post("/login", async (req, res) => {
         if(!username || !password) {
             return res.status(400).json({ error: "Invalid input" });
         }
-
-        // Kontroll inloggning
-        //if(username == "admin" && password == "pass")
         
         // Hämta data från env-fil
         let adminAcc = process.env.ADMIN_ACCOUNT;
         let adminPass = process.env.ADMIN_PASSWORD;
-
-        // Testlogg
-        console.log(adminAcc, adminPass);
 
         if(username != adminAcc) {
             return res.status(401).json({ error: "Incorrect username and/or password" });
@@ -162,24 +140,6 @@ app.post("/login", async (req, res) => {
 
             res.status(200).json({ response });
         }
-
-        /* // Kontroll, input stämmer med lagrade användaruppgifter?
-        if(username == adminAcc && password == adminPass) {
-
-            // Skapa JWT
-            const payload = { username: username };
-            const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: "12h"});
-            const response = {
-                message: "User logged in!",
-                token: token
-            }
-            res.status(200).json({ response });
-
-            // console.log(adminAcc, adminPass); // Testlogg env-data
-
-        } else {
-            res.status(401).json({ error: "Invalid username and/or password"});
-        } */
 
     } catch (error) {
         res.status(500).json({ error: "Server error" });
@@ -206,7 +166,6 @@ function authenticateToken(req, res, next) {
         next();
     });
 }
-
 
 // Starta
 app.listen(port, () => {
