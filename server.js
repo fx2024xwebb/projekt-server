@@ -63,8 +63,7 @@ app.get("/products", async (req, res) => {
 });
 
 // POST: Lägg till nytt inlägg i databasen
-app.post("/products", authenticateToken, async (req, res) => {
-
+app.post("/products", async (req, res) => {
     try {
         let result = await Product.create(req.body);
 
@@ -76,7 +75,7 @@ app.post("/products", authenticateToken, async (req, res) => {
 });
 
 // PUT: Uppdatera inlägg i databasen
-app.put("/products/:id", authenticateToken, async (req, res) => {
+app.put("/products/:id", async (req, res) => {
     
     try {
         let id = req.params.id;
@@ -94,7 +93,7 @@ app.put("/products/:id", authenticateToken, async (req, res) => {
 });
 
 // DELETE: Radera inlägg i databasen
-app.delete("/products/:id", authenticateToken, async (req, res) => {
+app.delete("/products/:id", async (req, res) => {
 
     try {
         let id = req.params.id;
