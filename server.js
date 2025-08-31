@@ -93,7 +93,7 @@ app.put("/products/:id", async (req, res) => {
 });
 
 // DELETE: Radera inlägg i databasen
-app.delete("/products/:id", async (req, res) => {
+app.delete("/products/:id", authenticateToken, async (req, res) => {
 
     try {
         let id = req.params.id;
