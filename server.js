@@ -63,7 +63,7 @@ app.get("/products", async (req, res) => {
 });
 
 // POST: Lägg till nytt inlägg i databasen
-app.post("/products", async (req, res) => {
+app.post("/products", authenticateToken, async (req, res) => {
     try {
         let result = await Product.create(req.body);
 
@@ -113,7 +113,8 @@ app.post("/login", async (req, res) => {
     try {
         const { username, password } = req.body;
 
-        // Validera input
+
+       // Validera input
         if(!username || !password) {
             return res.status(400).json({ error: "Invalid input" });
         }
@@ -128,6 +129,7 @@ app.post("/login", async (req, res) => {
 
         if(adminPass != adminPass) {
             return res.status(401).json({ error: "Incorrect username and/or password" });
+
         } else {
 
             // Skapa JWT
