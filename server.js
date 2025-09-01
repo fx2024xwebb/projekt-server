@@ -75,7 +75,7 @@ app.post("/products", authenticateToken, async (req, res) => {
 });
 
 // PUT: Uppdatera inlägg i databasen
-app.put("/products/:id", async (req, res) => {
+app.put("/products/:id", authenticateToken, async (req, res) => {
     
     try {
         let id = req.params.id;
