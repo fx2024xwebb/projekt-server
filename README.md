@@ -1,10 +1,12 @@
 ## Projekt webbplats
 
 Det här är en webbplats skapad som en del av ett projekt.<br>
-Det här är server-delen av projektet.<br>
-
-Här hanteras bl.a. kommunikation med databasen, autentisering och inloggning,<br>
-samt interaktion med databasen via CRUD-operationer.
+Webbplatsen är för ett fiktivt Coffee House.<br>
+Det här projektet hanterar server-sidan av webbplatsen.
+<br>
+Här hanteras:
+- Kommunikation med databasen samt CRUD-operationer.
+- Inloggning och autentisering av administratörskonto.
 
 ### Användning
 
