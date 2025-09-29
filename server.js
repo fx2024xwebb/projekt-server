@@ -39,8 +39,20 @@ const ProductSchema = new mongoose.Schema({
         required: [true, "Beskrivning av produkt måste anges."],
     }
 });
-
 const Product = mongoose.model("Product", ProductSchema);
+
+// TEST
+const UserSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    }
+});
+const User = mongoose.model("User", UserSchema);
 
 
 /* Routing */
@@ -48,7 +60,19 @@ const Product = mongoose.model("Product", ProductSchema);
 // API
 app.get("/projektserver", async (req, res) => {
     res.json({ message: "API status OK!"});
-})
+});
+
+app.get("/user", async (req, res) => {
+
+    try {
+        let result = await User.find({});
+
+        return res.json(result);
+
+    } catch(error) {
+        return res.status(500)
+    }
+});
 
 // GET: Hämta inlägg från databasen
 app.get("/products", async (req, res) => {
