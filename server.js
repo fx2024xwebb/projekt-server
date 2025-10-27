@@ -7,6 +7,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
+
 require("dotenv").config();
 
 const app = express();
@@ -125,6 +126,7 @@ app.delete("/products/:id", authenticateToken, async (req, res) => {
     }
 });
 
+
 // Admin login
 app.post("/login", async (req, res) => {
     
@@ -151,10 +153,10 @@ app.post("/login", async (req, res) => {
             return res.status(401).json({ error: "Incorrect username and/or password"});
         }
 
-        //testlogg
+        // Testlogg
         console.log("User OK!");
 
-        // Kolla lösenord inloggning
+        // Kolla lösenord
         if (password !== user.password) {
             return res.status(401).json({ error: "Incorrect username and/or password"});
         }
@@ -169,30 +171,6 @@ app.post("/login", async (req, res) => {
         };
 
         res.status(200).json({ response });
-
-        // Hämta data från env-fil
-        /* let adminAcc = process.env.ADMIN_ACCOUNT;
-        let adminPass = process.env.ADMIN_PASSWORD; */
-
-        /* if(username != adminAcc) {
-            return res.status(401).json({ error: "Incorrect username and/or password" });
-        } 
-
-        if(adminPass != adminPass) {
-            return res.status(401).json({ error: "Incorrect username and/or password" });
-
-        } else {
-
-            // Skapa JWT
-            const payload = { username: username };
-            const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: '10h'});
-            const response = {
-                message: "User logged in.",
-                token: token
-            }
-
-            res.status(200).json({ response });
-        } */
 
     } catch (error) {
         res.status(500).json({ error: "Server error" });
