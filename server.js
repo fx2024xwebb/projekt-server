@@ -15,14 +15,19 @@ const port = 3000;
 app.use(express.json());
 app.use(cors());
 
+// test
+mongoose.set('debug', true);
+
 // Anslut MongoDb
+db = 
 mongoose.connect("mongodb://127.0.0.1:27017/projektserver").then(() => {
     console.log("Connected to MongoDb");
+    console.log("( " + mongoose.connection.db.databaseName + " )");
 }).catch((error) => {
     console.log("Error connecting to database: " + error);
 })
 
-// Produkt "Schema"
+// Produkt-Schema
 const ProductSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -41,18 +46,20 @@ const ProductSchema = new mongoose.Schema({
 });
 const Product = mongoose.model("Product", ProductSchema);
 
-// TEST
+// User-Schema (för admin)
 const UserSchema = new mongoose.Schema({
     username: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password: {
         type: String,
         required: true
     }
 });
-const User = mongoose.model("User", UserSchema);
+
+const User = mongoose.model("User", UserSchema, 'user');
 
 
 /* Routing */
@@ -60,18 +67,6 @@ const User = mongoose.model("User", UserSchema);
 // API
 app.get("/projektserver", async (req, res) => {
     res.json({ message: "API status OK!"});
-});
-
-app.get("/user", async (req, res) => {
-
-    try {
-        let result = await User.find({});
-
-        return res.json(result);
-
-    } catch(error) {
-        return res.status(500)
-    }
 });
 
 // GET: Hämta inlägg från databasen
@@ -85,6 +80,7 @@ app.get("/products", async (req, res) => {
         return res.status(500)
     }
 });
+
 
 // POST: Lägg till nytt inlägg i databasen
 app.post("/products", authenticateToken, async (req, res) => {
@@ -137,17 +133,48 @@ app.post("/login", async (req, res) => {
     try {
         const { username, password } = req.body;
 
-
        // Validera input
         if(!username || !password) {
             return res.status(400).json({ error: "Invalid input" });
         }
+        //testlogg
+        console.log("Username: ", username);
         
-        // Hämta data från env-fil
-        let adminAcc = process.env.ADMIN_ACCOUNT;
-        let adminPass = process.env.ADMIN_PASSWORD;
+        // Hämta användare
+        console.log("Search user...:", username);
+        const user = await User.findOne({ username: username });
+        console.log("User DB: ", user);
 
-        if(username != adminAcc) {
+        // Kolla användare inloggning
+        if (!user) {
+            console.log("No matching user");
+            return res.status(401).json({ error: "Incorrect username and/or password"});
+        }
+
+        //testlogg
+        console.log("User OK!");
+
+        // Kolla lösenord inloggning
+        if (password !== user.password) {
+            return res.status(401).json({ error: "Incorrect username and/or password"});
+        }
+
+        // JWT-check
+        const payload = { username: user.username };
+        const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: '10h'});
+
+        const response = {
+            message: "User logged in",
+            token: token
+        };
+
+        res.status(200).json({ response });
+
+        // Hämta data från env-fil
+        /* let adminAcc = process.env.ADMIN_ACCOUNT;
+        let adminPass = process.env.ADMIN_PASSWORD; */
+
+        /* if(username != adminAcc) {
             return res.status(401).json({ error: "Incorrect username and/or password" });
         } 
 
@@ -165,7 +192,7 @@ app.post("/login", async (req, res) => {
             }
 
             res.status(200).json({ response });
-        }
+        } */
 
     } catch (error) {
         res.status(500).json({ error: "Server error" });
